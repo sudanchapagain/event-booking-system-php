@@ -152,10 +152,10 @@ function safe_htmlspecialchars($value)
                 <div class="event-container">
                     <?php foreach ($events as $event): ?>
                         <div class="event-item">
-                            <?php 
-                                $imageQuery = "SELECT image_url FROM event_images WHERE event_id = $1 LIMIT 1";
-                                $imageResult = pg_query_params($db, $imageQuery, [$event['event_id']]);
-                                $image = pg_fetch_assoc($imageResult);
+                            <?php
+                            $imageQuery = "SELECT image_url FROM event_images WHERE event_id = $1 LIMIT 1";
+                            $imageResult = pg_query_params($db, $imageQuery, [$event['event_id']]);
+                            $image = pg_fetch_assoc($imageResult);
                             ?>
                             <?php if ($image && isset($image['image_url'])): ?>
                                 <img src="<?= htmlspecialchars($image['image_url']); ?>" width="100%" style="height: 200px; border-radius: 12px; border: 1px solid lightgrey;">

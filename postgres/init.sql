@@ -55,6 +55,15 @@ CREATE TABLE event_dates (
     end_date TIMESTAMP NOT NULL
 );
 
+CREATE TABLE ticket_sales (
+    sale_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE SET NULL,
+    event_id INT REFERENCES events(event_id) ON DELETE CASCADE,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    total_price DECIMAL(10, 2) NOT NULL,
+    sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 DO $$
 DECLARE
     deleted_user_id INT;

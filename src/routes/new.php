@@ -6,40 +6,6 @@ $user_id = $_SESSION["user_id"] ?? null;
 $db = getDbConnection();
 $errors = [];
 
-if ($user_id) {
-    try {
-        pg_query($db, "BEGIN");
-
-        $query = "SELECT is_organizer FROM users WHERE user_id = $1";
-        $result = pg_query_params($db, $query, [$user_id]);
-
-        if ($result) {
-            $user = pg_fetch_assoc($result);
-            if (!$user) {
-                throw new Exception("User not found.");
-            }
-
-            if (!$user["is_organizer"]) {
-                $updateQuery = "UPDATE users SET is_organizer = TRUE WHERE user_id = $1";
-                $updateResult = pg_query_params($db, $updateQuery, [$user_id]);
-                if (!$updateResult) {
-                    throw new Exception("Error updating user to organizer: " . pg_last_error($db));
-                }
-            }
-        } else {
-            throw new Exception("Error in SELECT query: " . pg_last_error($db));
-        }
-
-        pg_query($db, "COMMIT");
-    } catch (Exception $e) {
-        pg_query($db, "ROLLBACK");
-        error_log("Transaction failed: " . $e->getMessage());
-    }
-} else {
-    header("Location: /login");
-    exit();
-}
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $title = trim($_POST["title"] ?? "");
     $location = trim($_POST["location"] ?? "");
@@ -161,10 +127,10 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
         <?php if (!empty($errors)): ?>
             <ul>
                 <?php foreach ($errors as $error): ?>
-                    <li class="error-message"><?=htmlspecialchars($error)?></li>
-                <?php endforeach;?>
+                    <li class="error-message"><?= htmlspecialchars($error) ?></li>
+                <?php endforeach; ?>
             </ul>
-        <?php endif;?>
+        <?php endif; ?>
 
         <form action="new" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
             <label for="title">Event Title <small>*</small></label>
@@ -222,8 +188,8 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
             <select name="category" id="category">
                 <option value="">Select Category</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?=$category['category_id']?>"><?=htmlspecialchars($category['name'])?></option>
-                <?php endforeach;?>
+                    <option value="<?= $category['category_id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
+                <?php endforeach; ?>
             </select>
             <br><br>
 
@@ -234,4 +200,4 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
     </main>
 </body>
 
-<?php include __DIR__ . "/../components/footer.php";?>
+<?php include __DIR__ . "/../components/footer.php"; ?>

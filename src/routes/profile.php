@@ -8,7 +8,7 @@ if (!$user_id) {
 }
 
 $db = getDbConnection();
-$query = "SELECT user_id, username, profile_picture, user_phone, email FROM users WHERE user_id = $1";
+$query = "SELECT user_id, username, user_phone, email FROM users WHERE user_id = $1";
 $result = pg_query_params($db, $query, [$user_id]);
 
 if (!$result) {
@@ -39,9 +39,9 @@ function escape($value): string
             <?php if (isset($_GET['update']) && $_GET['update'] === 'success'): ?>
                 <p class="signupSuccessMessage" style="text-align: center;">Profile updated successfully!</p>
             <?php endif; ?>
-            
+
             <div>
-                <img src="<?= escape($user['profile_picture'] ?: '/assets/images/default-avatar.png') ?>" alt="Profile Picture"
+                <img src="/assets/images/default-avatar.png" alt="Profile Picture"
                     style="width: 150px; height: 150px; border-radius: 50%; margin: 0 auto; display: block; border: 1px solid lightgrey;"></p>
             </div>
 

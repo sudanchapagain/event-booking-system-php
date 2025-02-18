@@ -6,13 +6,13 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require_once __DIR__ . "/../src/config/config.php";
 
-function isLoggedIn()
-{
+function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
 
 $routes = [
     "event" => ["controller" => "event", "auth" => false],
+    "validate" => ["controller" => "validate", "auth" => false],
     "explore" => ["controller" => "explore", "auth" => false],
 
     "new" => ["controller" => "new", "auth" => true],
@@ -49,6 +49,8 @@ if (array_key_exists($segments[0], $routes)) {
         require __DIR__ . "/../src/handlers/signup_handler.php";
     } elseif ($method === 'POST' && $segments[0] === "login") {
         require __DIR__ . "/../src/handlers/login_handler.php";
+    } elseif ($method === 'POST' && $segments[0] === "events") {
+        require __DIR__ . "/../src/handlers/payment_handler.php";
     } else {
         $controller = basename($route['controller']);
         require __DIR__ . "/../src/routes/" . $controller . ".php";

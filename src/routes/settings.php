@@ -10,7 +10,7 @@ if (!$user_id) {
 include __DIR__ . '/../components/header.php';
 $db = getDbConnection();
 
-$query = "SELECT username, profile_picture, user_phone, email FROM users WHERE user_id = $1";
+$query = "SELECT username, user_phone, email FROM users WHERE user_id = $1";
 $result = pg_query_params($db, $query, [$user_id]);
 
 if (!$result || pg_num_rows($result) === 0) {
@@ -90,19 +90,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form method="POST" action="/settings" style="border: 1px solid lightgrey; border-radius: 8px; padding: 30px; background-color: #fafafa;">
             <label for="username" class="subtitle-profile-detail">Username</label>
-            <input type="text" id="username" name="username" class="data-item-profile-detail" 
+            <input type="text" id="username" name="username" class="data-item-profile-detail"
                 value="<?= escape($user['username']) ?>" required style="width: 100%;" />
-            
+
             <label for="user_phone" class="subtitle-profile-detail">Phone Number</label>
-            <input type="text" id="user_phone" name="user_phone" class="data-item-profile-detail" 
+            <input type="text" id="user_phone" name="user_phone" class="data-item-profile-detail"
                 value="<?= escape($user['user_phone']) ?>" style="width: 100%;" />
-            
+
             <label for="email" class="subtitle-profile-detail">Email</label>
-            <input type="email" id="email" name="email" class="data-item-profile-detail" 
+            <input type="email" id="email" name="email" class="data-item-profile-detail"
                 value="<?= escape($user['email']) ?>" required style="width: 100%;" />
-            
+
             <label for="password" class="subtitle-profile-detail">Password</label>
-            <input type="password" id="password" name="password" class="data-item-profile-detail" 
+            <input type="password" id="password" name="password" class="data-item-profile-detail"
                 style="width: 100%;" placeholder="Leave blank to keep current password" />
 
             <button type="submit" class="edit-button-profile">Save Changes</button>

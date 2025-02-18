@@ -39,7 +39,6 @@ function userHasPermission($user_id, $permission)
         } else {
             return false;
         }
-
     }
     return false;
 }
@@ -53,7 +52,6 @@ function safe_htmlspecialchars($value)
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -89,7 +87,10 @@ function safe_htmlspecialchars($value)
             <hr>
 
             <ul class="nav-items">
-                <li class="<?=isActive($tab, 'dashboard')?>"><a href="/dashboard?tab=dashboard"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
+                <li class="<?= isActive(
+                    $tab,
+                    'dashboard'
+                ) ?>"><a href="/dashboard?tab=dashboard"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                             <g fill="currentColor">
                                 <g opacity=".2">
                                     <path fill-rule="evenodd" d="M8 4.351c0-.47.414-.851.926-.851h6.148c.512 0 .926.381.926.851V7.65c0 .47-.414.851-.926.851H8.926C8.414 8.5 8 8.119 8 7.649V4.35Z" clip-rule="evenodd" />
@@ -101,36 +102,48 @@ function safe_htmlspecialchars($value)
                         </svg>Dashboard</a></li>
 
                 <?php if (!userHasPermission($user_id, 'admin')): ?>
-                        <li class="<?=isActive($tab, 'bookings')?>"><a href="/dashboard?tab=bookings"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:3px; middle;margin-right: 0.5rem;" viewBox="0 0 20 20">
-                            <g fill="currentColor">
-                                <path d="m11 5.79l7.314-1.27a1.5 1.5 0 0 1 .242-.02c.801 0 1.444.664 1.444 1.475v9.786c0 .72-.511 1.34-1.213 1.456l-7.705 1.276a.499.499 0 0 1-.18-.002l-7.647-1.267A1.5 1.5 0 0 1 2 15.744V6.011a1.5 1.5 0 0 1 1.756-1.478L11 5.79Z" opacity=".2" />
-                                <path fill-rule="evenodd" d="M10.08 4.304L2.244 3.019A1.5 1.5 0 0 0 .5 4.5v9.738a1.5 1.5 0 0 0 1.268 1.482l8.155 1.275a.5.5 0 0 0 .577-.494V4.797a.5.5 0 0 0-.42-.493Zm-8-.298L9.5 5.222v10.694L1.923 14.73a.5.5 0 0 1-.423-.493V4.5a.5.5 0 0 1 .58-.494Z" clip-rule="evenodd" />
-                                <path fill-rule="evenodd" d="M18 3a1.5 1.5 0 0 0-.243.02L9.92 4.303a.5.5 0 0 0-.419.493V16.5a.5.5 0 0 0 .577.494l8.155-1.275a1.5 1.5 0 0 0 1.268-1.482V4.5A1.5 1.5 0 0 0 18 3Zm.077 11.73L10.5 15.916V5.222l7.42-1.216a.501.501 0 0 1 .58.494v9.737a.5.5 0 0 1-.423.493Z" clip-rule="evenodd" />
-                            </g>
-                        </svg>Bookings</a></li>
-                    <?php endif;?>
+                    <li class="<?= isActive(
+                        $tab,
+                        'bookings'
+                    ) ?>"><a href="/dashboard?tab=bookings"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:3px; middle;margin-right: 0.5rem;" viewBox="0 0 20 20">
+                                <g fill="currentColor">
+                                    <path d="m11 5.79l7.314-1.27a1.5 1.5 0 0 1 .242-.02c.801 0 1.444.664 1.444 1.475v9.786c0 .72-.511 1.34-1.213 1.456l-7.705 1.276a.499.499 0 0 1-.18-.002l-7.647-1.267A1.5 1.5 0 0 1 2 15.744V6.011a1.5 1.5 0 0 1 1.756-1.478L11 5.79Z" opacity=".2" />
+                                    <path fill-rule="evenodd" d="M10.08 4.304L2.244 3.019A1.5 1.5 0 0 0 .5 4.5v9.738a1.5 1.5 0 0 0 1.268 1.482l8.155 1.275a.5.5 0 0 0 .577-.494V4.797a.5.5 0 0 0-.42-.493Zm-8-.298L9.5 5.222v10.694L1.923 14.73a.5.5 0 0 1-.423-.493V4.5a.5.5 0 0 1 .58-.494Z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M18 3a1.5 1.5 0 0 0-.243.02L9.92 4.303a.5.5 0 0 0-.419.493V16.5a.5.5 0 0 0 .577.494l8.155-1.275a1.5 1.5 0 0 0 1.268-1.482V4.5A1.5 1.5 0 0 0 18 3Zm.077 11.73L10.5 15.916V5.222l7.42-1.216a.501.501 0 0 1 .58.494v9.737a.5.5 0 0 1-.423.493Z" clip-rule="evenodd" />
+                                </g>
+                            </svg>Bookings</a></li>
+                <?php endif; ?>
                 <?php if (!userHasPermission($user_id, 'admin')): ?>
-                <li class="<?=isActive($tab, 'sales')?>"><a href="/dashboard?tab=sales"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
-                            <g fill="currentColor">
-                                <path fill-rule="evenodd" d="M5.219 2.75H4.2a.75.75 0 0 1 0-1.5h1.603a.75.75 0 0 1 .727.566l1.502 5.937a1.998 1.998 0 0 1 .974-.253h7.989a2.012 2.012 0 0 1 1.955 2.468l-.783 3.461A2.009 2.009 0 0 1 16.21 15H9.79a2.008 2.008 0 0 1-1.956-1.57L7.05 9.967a2.058 2.058 0 0 1-.027-.145a.754.754 0 0 1-.05-.14L5.219 2.75ZM9.25 18.5a1.75 1.75 0 1 0 0-3.5a1.75 1.75 0 0 0 0 3.5Zm7 0a1.75 1.75 0 1 0 0-3.5a1.75 1.75 0 0 0 0 3.5Z" clip-rule="evenodd" opacity=".2" />
-                                <path d="M3.712 2.5H2.5a.5.5 0 0 1 0-1h1.603a.5.5 0 0 1 .485.379l1.897 7.6a.5.5 0 0 1-.97.242L3.712 2.5Z" />
-                                <path fill-rule="evenodd" d="M15.495 7.5h-7.99c-.15 0-.3.017-.447.05A2.02 2.02 0 0 0 5.55 9.969l.783 3.461A2.008 2.008 0 0 0 8.29 15h6.422a2.01 2.01 0 0 0 1.956-1.57l.783-3.462A2.012 2.012 0 0 0 15.495 7.5ZM7.283 8.525a.992.992 0 0 1 .223-.025h7.989a1.013 1.013 0 0 1 .98 1.247l-.784 3.462a1.009 1.009 0 0 1-.98.791H8.29c-.468 0-.875-.328-.98-.791l-.783-3.462a1.02 1.02 0 0 1 .757-1.222Z" clip-rule="evenodd" />
-                                <path d="M17 16.75a1.75 1.75 0 1 1-3.5 0a1.75 1.75 0 0 1 3.5 0Zm-7 0a1.75 1.75 0 1 1-3.5 0a1.75 1.75 0 0 1 3.5 0Z" />
-                            </g>
-                        </svg>Sales</a></li>
-                <?php endif;?>
+                    <li class="<?= isActive(
+                        $tab,
+                        'sales'
+                    ) ?>"><a href="/dashboard?tab=sales"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
+                                <g fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.219 2.75H4.2a.75.75 0 0 1 0-1.5h1.603a.75.75 0 0 1 .727.566l1.502 5.937a1.998 1.998 0 0 1 .974-.253h7.989a2.012 2.012 0 0 1 1.955 2.468l-.783 3.461A2.009 2.009 0 0 1 16.21 15H9.79a2.008 2.008 0 0 1-1.956-1.57L7.05 9.967a2.058 2.058 0 0 1-.027-.145a.754.754 0 0 1-.05-.14L5.219 2.75ZM9.25 18.5a1.75 1.75 0 1 0 0-3.5a1.75 1.75 0 0 0 0 3.5Zm7 0a1.75 1.75 0 1 0 0-3.5a1.75 1.75 0 0 0 0 3.5Z" clip-rule="evenodd" opacity=".2" />
+                                    <path d="M3.712 2.5H2.5a.5.5 0 0 1 0-1h1.603a.5.5 0 0 1 .485.379l1.897 7.6a.5.5 0 0 1-.97.242L3.712 2.5Z" />
+                                    <path fill-rule="evenodd" d="M15.495 7.5h-7.99c-.15 0-.3.017-.447.05A2.02 2.02 0 0 0 5.55 9.969l.783 3.461A2.008 2.008 0 0 0 8.29 15h6.422a2.01 2.01 0 0 0 1.956-1.57l.783-3.462A2.012 2.012 0 0 0 15.495 7.5ZM7.283 8.525a.992.992 0 0 1 .223-.025h7.989a1.013 1.013 0 0 1 .98 1.247l-.784 3.462a1.009 1.009 0 0 1-.98.791H8.29c-.468 0-.875-.328-.98-.791l-.783-3.462a1.02 1.02 0 0 1 .757-1.222Z" clip-rule="evenodd" />
+                                    <path d="M17 16.75a1.75 1.75 0 1 1-3.5 0a1.75 1.75 0 0 1 3.5 0Zm-7 0a1.75 1.75 0 1 1-3.5 0a1.75 1.75 0 0 1 3.5 0Z" />
+                                </g>
+                            </svg>Sales</a></li>
+                <?php endif; ?>
                 <?php if (userHasPermission($user_id, 'admin')): ?>
-                    <li class="<?=isActive($tab, 'moderation')?>"><a href="/dashboard?tab=moderation"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
+                    <li class="<?= isActive(
+                        $tab,
+                        'moderation'
+                    ) ?>"><a href="/dashboard?tab=moderation"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                                 <g fill="currentColor">
                                     <path d="m8 4.97l.954-.396a4 4 0 0 1 2.908.058l1.482.613a4 4 0 0 0 2.693.13l.893-.271A1.604 1.604 0 0 1 19 6.638V10.7a3.22 3.22 0 0 1-1.66 2.817l-.734.407a4 4 0 0 1-3.88 0l-.453-.251a4 4 0 0 0-3.88 0l-.226.126c-.055.03-.11.056-.167.079V19a1 1 0 1 1-2 0V5a1 1 0 0 1 1-1c.81 0 1 .97 1 .97Z" opacity=".2" />
                                     <path fill-rule="evenodd" d="m6.804 2.632l-.637.264A3.507 3.507 0 0 0 4 6.137v4.386a1.46 1.46 0 0 0 2.167 1.276l.227-.126a4 4 0 0 1 3.88 0l.453.251a4 4 0 0 0 3.88 0l.734-.407A3.222 3.222 0 0 0 17 8.7V4.638a1.605 1.605 0 0 0-2.07-1.534l-.893.272a4 4 0 0 1-2.694-.13l-1.48-.614a4 4 0 0 0-3.059 0ZM5 6.137c0-1.014.611-1.929 1.549-2.317l.638-.264a3 3 0 0 1 2.293 0l1.481.613a5 5 0 0 0 3.367.163l.893-.271a.604.604 0 0 1 .779.577V8.7c0 .807-.438 1.551-1.144 1.943l-.735.407a3 3 0 0 1-2.91 0l-.453-.252a5 5 0 0 0-4.85 0l-.226.126A.46.46 0 0 1 5 10.523V6.137Z" clip-rule="evenodd" />
                                     <path fill-rule="evenodd" d="M5 2a1 1 0 0 1 1 1v14a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Z" clip-rule="evenodd" />
                                 </g>
                             </svg>Moderation</a></li>
-                <?php endif;?>
+                <?php endif; ?>
 
                 <?php if (userHasPermission($user_id, 'admin')): ?>
-                    <li class="<?=isActive($tab, 'posts')?>"><a href="/dashboard?tab=posts"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
+                    <li class="<?= isActive(
+                        $tab,
+                        'posts'
+                    ) ?>"><a href="/dashboard?tab=posts"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                                 <g fill="currentColor">
                                     <g opacity=".2">
                                         <path d="M17 3h-7a2 2 0 0 0-2 2v13.5A1.5 1.5 0 0 0 9.5 20H17a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Z" />
@@ -150,99 +163,99 @@ function safe_htmlspecialchars($value)
                                     <path fill-rule="evenodd" d="M4.67 11.65a.75.75 0 1 0 1.5 0a.75.75 0 0 0-1.5 0Zm.75 1.75a1.75 1.75 0 1 1 0-3.5a1.75 1.75 0 0 1 0 3.5Z" clip-rule="evenodd" />
                                 </g>
                             </svg>Manage Posts</a></li>
-                <?php endif;?>
+                <?php endif; ?>
 
             </ul>
         </div>
 
         <div class="main-content">
             <?php
-$db = getDbConnection();
-$user_id = $_SESSION['user_id'];
-$query = "SELECT is_admin FROM users WHERE user_id = $1";
-$result = pg_query_params($db, $query, [$user_id]);
-$is_admin = false;
+            $db = getDbConnection();
+            $user_id = $_SESSION['user_id'];
+            $query = "SELECT is_admin FROM users WHERE user_id = $1";
+            $result = pg_query_params($db, $query, [$user_id]);
+            $is_admin = false;
 
-if ($result) {
-    $user = pg_fetch_assoc($result);
-    if (userHasPermission($user_id, 'admin')) {
-        $is_admin = true;
-    }
-} else {
-    echo "<p>Error fetching user information.</p>";
-    exit();
-}
+            if ($result) {
+                $user = pg_fetch_assoc($result);
+                if (userHasPermission($user_id, 'admin')) {
+                    $is_admin = true;
+                }
+            } else {
+                echo "<p>Error fetching user information.</p>";
+                exit();
+            }
 
-switch ($tab) {
-    case 'bookings':
-        echo "<h1>Event Bookings</h1>";
-        $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
-        if (!$connection) {
-            die('Error: Unable to connect to the database.');
-        }
+            switch ($tab) {
+                case 'bookings':
+                    echo "<h1>Event Bookings</h1>";
+                    $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
+                    if (!$connection) {
+                        die('Error: Unable to connect to the database.');
+                    }
 
-        $organizerId = $_SESSION['user_id'];
+                    $organizerId = $_SESSION['user_id'];
 
-        $query = "SELECT e.event_id, e.title AS event_title, e.ticket_price, u.user_id, u.username, u.email, u.user_phone, a.status
+                    $query = "SELECT e.event_id, e.title AS event_title, e.ticket_price, u.user_id, u.username, u.email, u.user_phone, a.status
                               FROM events e
                               JOIN user_event_attendance a ON e.event_id = a.event_id
                               JOIN users u ON a.user_id = u.user_id
                               WHERE e.organizer_id = $1
                               ORDER BY e.event_id, u.username";
 
-        $result = pg_query_params($connection, $query, [$organizerId]);
+                    $result = pg_query_params($connection, $query, [$organizerId]);
 
-        if (!$result) {
-            $error = pg_last_error($connection);
-            die("Query failed: $error");
-        }
+                    if (!$result) {
+                        $error = pg_last_error($connection);
+                        die("Query failed: $error");
+                    }
 
-        $events = [];
-        while ($row = pg_fetch_assoc($result)) {
-            $event_id = $row['event_id'];
-            if (!isset($events[$event_id])) {
-                $events[$event_id] = [
-                    'title' => $row['event_title'],
-                    'ticket_price' => $row['ticket_price'],
-                    'attendees' => [],
-                ];
-            }
-            $events[$event_id]['attendees'][] = $row;
-        }
+                    $events = [];
+                    while ($row = pg_fetch_assoc($result)) {
+                        $event_id = $row['event_id'];
+                        if (!isset($events[$event_id])) {
+                            $events[$event_id] = [
+                                'title' => $row['event_title'],
+                                'ticket_price' => $row['ticket_price'],
+                                'attendees' => [],
+                            ];
+                        }
+                        $events[$event_id]['attendees'][] = $row;
+                    }
 
-        $eventCounter = 1;
+                    $eventCounter = 1;
 
-        foreach ($events as $event) {
-            $event_title = $event['title'];
-            $ticket_price = $event['ticket_price'];
+                    foreach ($events as $event) {
+                        $event_title = $event['title'];
+                        $ticket_price = $event['ticket_price'];
 
-            echo "<h2>$event_title</h2>";
+                        echo "<h2>$event_title</h2>";
 
-            $tableId = "bookingsTable_" . $eventCounter;
+                        $tableId = "bookingsTable_" . $eventCounter;
 
-            echo "<table class='table table-striped' id='$tableId'>";
-            echo "<thead><tr><th>Attendee</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead><tbody>";
+                        echo "<table class='table table-striped' id='$tableId'>";
+                        echo "<thead><tr><th>Attendee</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead><tbody>";
 
-            foreach ($event['attendees'] as $attendee) {
-                $username = $attendee['username'];
-                $email = $attendee['email'];
-                $user_phone = $attendee['user_phone'];
-                $status = $attendee['status'];
+                        foreach ($event['attendees'] as $attendee) {
+                            $username = $attendee['username'];
+                            $email = $attendee['email'];
+                            $user_phone = $attendee['user_phone'];
+                            $status = $attendee['status'];
 
-                echo "<tr>";
-                echo "<td>$username</td>";
-                echo "<td>$email</td>";
-                echo "<td>$user_phone</td>";
-                echo "<td class='status $status'>$status</td>";
-                echo "</tr>";
-            }
+                            echo "<tr>";
+                            echo "<td>$username</td>";
+                            echo "<td>$email</td>";
+                            echo "<td>$user_phone</td>";
+                            echo "<td class='status $status'>$status</td>";
+                            echo "</tr>";
+                        }
 
-            echo "</tbody></table>";
-            echo "<button onclick='printTable(\"$tableId\")' style='padding: 5px 10px; color: lightgrey; border:none; border-radius:50px; color:black;'>Print Bookings</button><br><br>";
-            $eventCounter++;
-        }
+                        echo "</tbody></table>";
+                        echo "<button onclick='printTable(\"$tableId\")' style='padding: 5px 10px; color: lightgrey; border:none; border-radius:50px; color:black;'>Print Bookings</button><br><br>";
+                        $eventCounter++;
+                    }
 
-        echo "<script>
+                    echo "<script>
                     function printTable(tableId) {
                         var printContent = document.getElementById(tableId).outerHTML;
                         var newWindow = window.open('', '', 'width=800, height=600');
@@ -255,20 +268,19 @@ switch ($tab) {
                     </script>
                     ";
 
+                    break;
 
-        break;
+                case 'sales':
+                    echo "<h1>Sales</h1>";
 
-    case 'sales':
-        echo "<h1>Sales</h1>";
+                    $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
+                    if (!$connection) {
+                        die('Error: Unable to connect to the database.');
+                    }
 
-        $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
-        if (!$connection) {
-            die('Error: Unable to connect to the database.');
-        }
+                    $organizerId = $_SESSION['user_id'];
 
-        $organizerId = $_SESSION['user_id'];
-
-        $query = "
+                    $query = "
                         SELECT
                             e.event_id,
                             e.title AS event_title,
@@ -282,33 +294,33 @@ switch ($tab) {
                         ORDER BY e.event_id
                     ";
 
-        $result = pg_query_params($connection, $query, [$organizerId]);
+                    $result = pg_query_params($connection, $query, [$organizerId]);
 
-        if (!$result) {
-            $error = pg_last_error($connection);
-            die("Query failed: $error");
-        }
+                    if (!$result) {
+                        $error = pg_last_error($connection);
+                        die("Query failed: $error");
+                    }
 
-        $eventCounter = 1;
+                    $eventCounter = 1;
 
-        while ($row = pg_fetch_assoc($result)) {
-            $event_title = $row['event_title'];
-            $ticket_price = $row['ticket_price'];
-            $attendee_count = $row['attendee_count'];
-            $total_revenue = $row['total_revenue'];
+                    while ($row = pg_fetch_assoc($result)) {
+                        $event_title = $row['event_title'];
+                        $ticket_price = $row['ticket_price'];
+                        $attendee_count = $row['attendee_count'];
+                        $total_revenue = $row['total_revenue'];
 
-            if ($ticket_price == 0) {
-                echo "<br><h2>$event_title</h2>";
-                echo "<br><p>This is a free event, so no revenue is generated.</p><br><br>";
-                continue;
-            }
+                        if ($ticket_price == 0) {
+                            echo "<br><h2>$event_title</h2>";
+                            echo "<br><p>This is a free event, so no revenue is generated.</p><br><br>";
+                            continue;
+                        }
 
-            echo "<h2>$event_title</h2> <br>";
-            echo "<p><b>Ticket Price</b>: NPR $ticket_price</p>";
-            echo "<p><b>Number of Attendees</b>: $attendee_count</p>";
-            echo "<p><b>Total Revenue</b>: NPR $total_revenue</p>";
+                        echo "<h2>$event_title</h2> <br>";
+                        echo "<p><b>Ticket Price</b>: NPR $ticket_price</p>";
+                        echo "<p><b>Number of Attendees</b>: $attendee_count</p>";
+                        echo "<p><b>Total Revenue</b>: NPR $total_revenue</p>";
 
-            $attendance_query = "
+                        $attendance_query = "
                             SELECT u.username, u.email, u.user_phone, a.status
                             FROM user_event_attendance a
                             JOIN users u ON a.user_id = u.user_id
@@ -316,39 +328,39 @@ switch ($tab) {
                             ORDER BY u.username
                         ";
 
-            $attendance_result = pg_query_params($connection, $attendance_query, [$row['event_id']]);
+                        $attendance_result = pg_query_params($connection, $attendance_query, [$row['event_id']]);
 
-            if (!$attendance_result) {
-                $error = pg_last_error($connection);
-                die("Query failed: $error");
-            }
+                        if (!$attendance_result) {
+                            $error = pg_last_error($connection);
+                            die("Query failed: $error");
+                        }
 
-            $tableId = "salesTable_" . $eventCounter;
+                        $tableId = "salesTable_" . $eventCounter;
 
-            echo "<table class='table table-striped' id='$tableId'>";
-            echo "<thead><tr><th>Attendee</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead><tbody>";
+                        echo "<table class='table table-striped' id='$tableId'>";
+                        echo "<thead><tr><th>Attendee</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead><tbody>";
 
-            while ($attendee = pg_fetch_assoc($attendance_result)) {
-                $username = $attendee['username'];
-                $email = $attendee['email'];
-                $user_phone = $attendee['user_phone'];
-                $status = $attendee['status'];
+                        while ($attendee = pg_fetch_assoc($attendance_result)) {
+                            $username = $attendee['username'];
+                            $email = $attendee['email'];
+                            $user_phone = $attendee['user_phone'];
+                            $status = $attendee['status'];
 
-                echo "<tr>";
-                echo "<td>$username</td>";
-                echo "<td>$email</td>";
-                echo "<td>$user_phone</td>";
-                echo "<td class='status $status'>$status</td>";
-                echo "</tr>";
-            }
+                            echo "<tr>";
+                            echo "<td>$username</td>";
+                            echo "<td>$email</td>";
+                            echo "<td>$user_phone</td>";
+                            echo "<td class='status $status'>$status</td>";
+                            echo "</tr>";
+                        }
 
-            echo "</tbody></table>";
-            echo "<button onclick='printTable(\"$tableId\")' style='padding: 5px 10px; color: lightgrey; border:none; border-radius:50px; color:black;'>Print Sales</button><br><br>";
+                        echo "</tbody></table>";
+                        echo "<button onclick='printTable(\"$tableId\")' style='padding: 5px 10px; color: lightgrey; border:none; border-radius:50px; color:black;'>Print Sales</button><br><br>";
 
-            $eventCounter++;
-        }
+                        $eventCounter++;
+                    }
 
-        echo "<script>
+                    echo "<script>
                     function printTable(tableId) {
                         var printContent = document.getElementById(tableId).outerHTML;
                         var newWindow = window.open('', '', 'width=800, height=600');
@@ -360,199 +372,244 @@ switch ($tab) {
                     }
                     </script>
                     ";
-        break;
-    case 'moderation':
-        echo "<h1>Moderation</h1>";
-        if (!$is_admin) {
-            echo "<p>You do not have permission to access this page.</p>";
-            break;
-        }
-
-        $action = $_POST['action'] ?? '';
-        $target_user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
-        $message = '';
-
-        if ($target_user_id && ($action === 'promote' || $action === 'demote' || $action === 'delete')) {
-            if ($action === 'promote') {
-                $query = "UPDATE users SET is_admin = TRUE WHERE user_id = $1";
-                $result = pg_query_params($db, $query, [$target_user_id]);
-                $message = $result ? "User promoted to admin." : "Error promoting user.";
-            } elseif ($action === 'demote') {
-                $query = "UPDATE users SET is_admin = FALSE WHERE user_id = $1";
-                $result = pg_query_params($db, $query, [$target_user_id]);
-                $message = $result ? "Admin rights removed from user." : "Error demoting user.";
-            } elseif ($action === 'delete') {
-                $deleted_user_query = "SELECT user_id FROM users WHERE username = 'deleted_user'";
-                $deleted_user_result = pg_query($db, $deleted_user_query);
-
-                if ($deleted_user_result && pg_num_rows($deleted_user_result) > 0) {
-                    $deleted_user_id = pg_fetch_result($deleted_user_result, 0, 'user_id');
-
-                    $updateRelatedRecordsQuery = "UPDATE user_event_attendance SET user_id = $1 WHERE user_id = $2";
-                    $updateRelatedRecordsResult = pg_query_params($db, $updateRelatedRecordsQuery, [$deleted_user_id, $target_user_id]);
-
-                    if ($updateRelatedRecordsResult) {
-                        $deleteUserQuery = "DELETE FROM users WHERE user_id = $1";
-                        $deleteUserResult = pg_query_params($db, $deleteUserQuery, [$target_user_id]);
-                        $message = $deleteUserResult ? "User successfully deleted." : "Error deleting user.";
-                    } else {
-                        $message = "Error updating related records for user deletion.";
-                    }
-                } else {
-                    $message = "Placeholder deleted user not found.";
-                }
-            }
-        }
-
-        echo "<div class='message' style='text-align: center; margin-bottom: 1rem'>$message</div>";
-
-        $query = "SELECT user_id, username, email, is_admin FROM users WHERE username != 'deleted_user'";
-        $usersResult = pg_query($db, $query);
-
-        if ($usersResult) {
-            $users = pg_fetch_all($usersResult);
-            if ($users) {
-                echo "<div class='user-list'>";
-                foreach ($users as $user) {
-                    if (userHasPermission($user['user_id'], 'admin')) {
-                        $user['is_admin'] = true;
-                    } else {
-                        $user['is_admin'] = false;
+                    break;
+                case 'moderation':
+                    echo "<h1>Moderation</h1>";
+                    if (!$is_admin) {
+                        echo "<p>You do not have permission to access this page.</p>";
+                        break;
                     }
 
-                    echo "<div class='user-item'>
-                                <h3>" . htmlspecialchars($user['username']) . "</h3>
-                                <p>Email: " . htmlspecialchars($user['email']) . "</p>
-                                <p>Admin: " . ($user['is_admin'] ? 'Yes' : 'No') . "</p>
+                    $action = $_POST['action'] ?? '';
+                    $target_user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
+                    $message = '';
+
+                    if ($target_user_id && ($action === 'promote' || $action === 'demote' || $action === 'delete')) {
+                        if ($action === 'promote') {
+                            $query = "UPDATE users SET is_admin = TRUE WHERE user_id = $1";
+                            $result = pg_query_params($db, $query, [$target_user_id]);
+                            $message = $result ? "User promoted to admin." : "Error promoting user.";
+                        } elseif ($action === 'demote') {
+                            $query = "UPDATE users SET is_admin = FALSE WHERE user_id = $1";
+                            $result = pg_query_params($db, $query, [$target_user_id]);
+                            $message = $result ? "Admin rights removed from user." : "Error demoting user.";
+                        } elseif ($action === 'delete') {
+                            $deleted_user_query = "SELECT user_id FROM users WHERE username = 'deleted_user'";
+                            $deleted_user_result = pg_query($db, $deleted_user_query);
+
+                            if ($deleted_user_result && pg_num_rows($deleted_user_result) > 0) {
+                                $deleted_user_id = pg_fetch_result($deleted_user_result, 0, 'user_id');
+
+                                $updateRelatedRecordsQuery = "UPDATE user_event_attendance SET user_id = $1 WHERE user_id = $2";
+                                $updateRelatedRecordsResult = pg_query_params($db, $updateRelatedRecordsQuery, [$deleted_user_id, $target_user_id]);
+
+                                if ($updateRelatedRecordsResult) {
+                                    $deleteUserQuery = "DELETE FROM users WHERE user_id = $1";
+                                    $deleteUserResult = pg_query_params($db, $deleteUserQuery, [$target_user_id]);
+                                    $message = $deleteUserResult ? "User successfully deleted." : "Error deleting user.";
+                                } else {
+                                    $message = "Error updating related records for user deletion.";
+                                }
+                            } else {
+                                $message = "Placeholder deleted user not found.";
+                            }
+                        }
+                    }
+
+                    echo "<div class='message' style='text-align: center; margin-bottom: 1rem'>$message</div>";
+
+                    $query = "SELECT user_id, username, email, is_admin FROM users WHERE username != 'deleted_user'";
+                    $usersResult = pg_query($db, $query);
+
+                    if ($usersResult) {
+                        $users = pg_fetch_all($usersResult);
+                        if ($users) {
+                            echo "<div class='user-list'>";
+                            foreach ($users as $user) {
+                                if (userHasPermission($user['user_id'], 'admin')) {
+                                    $user['is_admin'] = true;
+                                } else {
+                                    $user['is_admin'] = false;
+                                }
+
+                                echo "<div class='user-item'>
+                                <h3>" .
+                                    htmlspecialchars($user['username']) .
+                                    "</h3>
+                                <p>Email: " .
+                                    htmlspecialchars($user['email']) .
+                                    "</p>
+                                <p>Admin: " .
+                                    ($user['is_admin'] ? 'Yes' : 'No') .
+                                    "</p>
                                 <form method='POST' action='/dashboard?tab=moderation'>
-                                <input type='hidden' name='user_id' value='" . $user['user_id'] . "'>";
+                                <input type='hidden' name='user_id' value='" .
+                                    $user['user_id'] .
+                                    "'>";
 
-                    if ($user['is_admin']) {
-                        echo "<button class='moderate-users-button' type='submit' name='action' value='demote'>Remove Admin Rights</button>";
-                    } else {
-                        echo "<button class='moderate-users-button' type='submit' name='action' value='promote'>Make Admin</button>";
-                    }
+                                if ($user['is_admin']) {
+                                    echo "<button class='moderate-users-button' type='submit' name='action' value='demote'>Remove Admin Rights</button>";
+                                } else {
+                                    echo "<button class='moderate-users-button' type='submit' name='action' value='promote'>Make Admin</button>";
+                                }
 
-                    echo "<button class='moderate-users-button-delete' type='submit' name='action' value='delete' onclick='return confirm(\"Are you sure you want to delete this user?\")'>Delete User</button>
+                                echo "<button class='moderate-users-button-delete' type='submit' name='action' value='delete' onclick='return confirm(\"Are you sure you want to delete this user?\")'>Delete User</button>
                                 </form>
                                 </div>";
-                }
-                echo "</div>";
-            } else {
-                echo "<p>No users found.</p>";
-            }
-        } else {
-            echo "<p>Error fetching user list.</p>";
-        }
-        break;
+                            }
+                            echo "</div>";
+                        } else {
+                            echo "<p>No users found.</p>";
+                        }
+                    } else {
+                        echo "<p>Error fetching user list.</p>";
+                    }
+                    break;
 
-    case 'posts':
-        echo "<h1>Manage Posts</h1>";
-        $event_id = isset($_POST['event_id']) ? intval($_POST['event_id']) : 0;
-        $action = isset($_POST['action']) ? $_POST['action'] : '';
+                case 'posts':
+                    echo "<h1>Manage Posts</h1>";
+                    $event_id = isset($_POST['event_id']) ? intval($_POST['event_id']) : 0;
+                    $action = isset($_POST['action']) ? $_POST['action'] : '';
 
-        if ($event_id && ($action === 'approve' || $action === 'reject')) {
-            if ($action === 'approve') {
-                $query = "UPDATE events SET is_approved = TRUE WHERE event_id = $1";
-                $result = pg_query_params($db, $query, [$event_id]);
+                    if ($event_id && ($action === 'approve' || $action === 'reject')) {
+                        if ($action === 'approve') {
+                            pg_query($db, "BEGIN");
 
-                if ($result) {
-                    $message = "Event successfully approved!";
-                } else {
-                    $message = "Error approving the event.";
-                }
-            } elseif ($action === 'reject') {
-                $deleteEventQuery = "DELETE FROM events WHERE event_id = $1";
-                $deleteResult = pg_query_params($db, $deleteEventQuery, [$event_id]);
+                            $organizerQuery = "SELECT organizer_id FROM events WHERE event_id = $1";
+                            $organizerResult = pg_query_params($db, $organizerQuery, [$event_id]);
 
-                if ($deleteResult) {
-                    $message = "Event successfully rejected and deleted!";
-                } else {
-                    $message = "Error rejecting and deleting the event.";
-                }
-            }
-        } else {
-            $message = "";
-        }
+                            if ($organizerResult) {
+                                $organizer = pg_fetch_assoc($organizerResult);
 
-        echo "<div class='message'>$message</div>";
+                                // if event creator's id (uid) exits then upon approve command approve the event and
+                                // assign organizer role.
+                                if ($organizer && $organizer['organizer_id']) {
+                                    $organizer_id = $organizer['organizer_id'];
 
-        $query = "SELECT event_id, title, description, location FROM events WHERE is_approved = FALSE";
-        $eventsResult = pg_query($db, $query);
+                                    $approveEventQuery = "UPDATE events SET is_approved = TRUE WHERE event_id = $1";
+                                    $approveEventResult = pg_query_params($db, $approveEventQuery, [$event_id]);
 
-        if ($eventsResult) {
-            $events = pg_fetch_all($eventsResult);
-            if ($events) {
-                echo "<div class='event-list'>";
-                foreach ($events as $event) {
-                    echo "<div class='event-item'>
-                                    <h3>" . safe_htmlspecialchars($event['title']) . "</h3>
-                                    <p class='descrip'>" . safe_htmlspecialchars($event['description']) . "</p>
-                                    <p>Location: " . safe_htmlspecialchars($event['location']) . "</p>
+                                    $promoteUserQuery = "UPDATE users SET is_organizer = TRUE WHERE user_id = $1 AND is_organizer = FALSE";
+                                    $promoteUserResult = pg_query_params($db, $promoteUserQuery, [$organizer_id]);
+
+                                    if ($approveEventResult && $promoteUserResult) {
+                                        pg_query($db, "COMMIT");
+                                        $message = "Event successfully approved and organizer promoted!";
+                                    } else {
+                                        pg_query($db, "ROLLBACK");
+                                        $message = "Error approving the event or promoting the organizer.";
+                                    }
+                                } else {
+                                    $message = "Error: No valid organizer found.";
+                                }
+                            } else {
+                                $message = "Error retrieving event organizer.";
+                            }
+
+                            if ($result) {
+                                $message = "Event successfully approved!";
+                            } else {
+                                $message = "Error approving the event.";
+                            }
+                        } elseif ($action === 'reject') {
+                            $deleteEventQuery = "DELETE FROM events WHERE event_id = $1";
+                            $deleteResult = pg_query_params($db, $deleteEventQuery, [$event_id]);
+
+                            if ($deleteResult) {
+                                $message = "Event successfully rejected and deleted!";
+                            } else {
+                                $message = "Error rejecting and deleting the event.";
+                            }
+                        }
+                    } else {
+                        $message = "";
+                    }
+
+                    echo "<div class='message'>$message</div>";
+
+                    $query = "SELECT event_id, title, description, location FROM events WHERE is_approved = FALSE";
+                    $eventsResult = pg_query($db, $query);
+
+                    if ($eventsResult) {
+                        $events = pg_fetch_all($eventsResult);
+                        if ($events) {
+                            echo "<div class='event-list'>";
+                            foreach ($events as $event) {
+                                echo "<div class='event-item'>
+                                    <h3>" .
+                                    safe_htmlspecialchars($event['title']) .
+                                    "</h3>
+                                    <p class='descrip'>" .
+                                    safe_htmlspecialchars($event['description']) .
+                                    "</p>
+                                    <p>Location: " .
+                                    safe_htmlspecialchars($event['location']) .
+                                    "</p>
                                     <br>
                                     <form method='POST' action='/dashboard?tab=posts'>
-                                        <input type='hidden' name='event_id' value='" . $event['event_id'] . "'>
+                                        <input type='hidden' name='event_id' value='" .
+                                    $event['event_id'] .
+                                    "'>
                                         <button style='background-color: #22c55e; color: #fff; padding: 8px 12px; border-radius: 20px; border: none; font-weight: 700; ' type='submit' name='action' value='approve'>Approve</button>
                                         <button style='background-color: #ff4d4d; color: #fff; padding: 8px 12px; border-radius: 20px; border: none; font-weight: 700; 'type='submit' name='action' value='reject'>Reject and Delete</button>
                                     </form>
                                 </div>";
-                }
-                echo "</div>";
-            } else {
-                echo "<p>No unapproved events found.</p>";
+                            }
+                            echo "</div>";
+                        } else {
+                            echo "<p>No unapproved events found.</p>";
+                        }
+                    } else {
+                        echo "<p>Error fetching unapproved events.</p>";
+                    }
+                    break;
+
+                case 'dashboard':
+                default:
+                    echo "<h1>Dashboard</h1>";
+                    if (!userHasPermission($user_id, 'admin')):
+                        echo "<div>
+	                            <div class='bento-container'>
+
+                                    <div class='bento-item booking'>
+                                        <h2>See Booking on Your Events</h2>
+                                        <p>Check who's attending and manage bookings with ease.</p>
+                                        <a href='/dashboard?tab=bookings'><button>View Bookings</button></a>
+                                    </div>
+
+
+                                    <div class='bento-item sales'>
+                                        <h2 style='color: #fff;'>Sales on Your Event</h2>
+                                        <p>See ticket sales and revenue trends.</p>
+                                        <a href='/dashboard?tab=sales'><button>View Sales</button></a>
+                                    </div>
+
+
+                                    <div class='bento-item explore'>
+                                        <h2>Explore Other Events</h2>
+                                        <p>Discover exciting events curated just for you.</p>
+                                        <a href='/explore'><button style='background-color: grey; width: 100%'>Explore</button></a>
+                                    </div>
+
+
+                                    <div class='bento-item profile'>
+                                        <h2>View Your Profile</h2>
+                                        <p>Manage your personal details and preferences.</p>
+                                        <a href='/profile'><button style='background-color: grey; width: 100%'>View Profile</button></a>
+                                    </div>
+
+
+                                    <div class='bento-item settings'>
+                                        <h2>View Settings</h2>
+                                        <p>Manage your account and preferences with ease.</p>
+                                        <a href='/settings'><button style='background-color: grey; width: 100%'>Settings</button></a>
+                                    </div>
+                                </div>
+                        </div>";
+                    endif;
+                    break;
             }
-        } else {
-            echo "<p>Error fetching unapproved events.</p>";
-        }
-        break;
-
-    case 'dashboard':
-    default:
-        echo "<h1>Dashboard</h1>";
-        if (!userHasPermission($user_id, 'admin')):
-            echo "<div>
-	  <div class='bento-container'>
-
-	    <div class='bento-item booking'>
-	      <h2>See Booking on Your Events</h2>
-	      <p>Check who's attending and manage bookings with ease.</p>
-	      <a href='/dashboard?tab=bookings'><button>View Bookings</button></a>
-	    </div>
-
-
-	    <div class='bento-item sales'>
-	      <h2 style='color: #fff;'>Sales on Your Event</h2>
-	      <p>See ticket sales and revenue trends.</p>
-	      <a href='/dashboard?tab=sales'><button>View Sales</button></a>
-	    </div>
-
-
-	    <div class='bento-item explore'>
-	      <h2>Explore Other Events</h2>
-	      <p>Discover exciting events curated just for you.</p>
-	      <a href='/explore'><button style='background-color: grey; width: 100%'>Explore</button></a>
-	    </div>
-
-
-	    <div class='bento-item profile'>
-	      <h2>View Your Profile</h2>
-	      <p>Manage your personal details and preferences.</p>
-	      <a href='/profile'><button style='background-color: grey; width: 100%'>View Profile</button></a>
-	    </div>
-
-
-	    <div class='bento-item settings'>
-	      <h2>View Settings</h2>
-	      <p>Manage your account and preferences with ease.</p>
-	      <a href='/settings'><button style='background-color: grey; width: 100%'>Settings</button></a>
-	    </div>
-	  </div>
-	  </div>
-	  ";
-        endif;
-        break;
-}
-?>
+            ?>
         </div>
     </div>
 

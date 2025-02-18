@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="../assets/css/default.css">
     <link rel="stylesheet" href="../assets/css/index.css">
     <link rel="stylesheet" href="../assets/css/tac.css"
-</head>
+        </head>
 
 <body>
     <main>

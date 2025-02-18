@@ -4,10 +4,10 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/credentials.php';
 
 $db = getDbConnection();
-$event_id = isset($_GET['event_id']) ? (int)$_GET['event_id'] : 0;
-$action = $_GET['action'] ?? '';
+$event_id = isset($_GET['event_id']) ? (int)$_GET['event_id'] : (isset($_POST['event_id']) ? (int)$_POST['event_id'] : -1);
+$action = $_GET['action'] ?? $_POST['action'] ?? '';
 
-if ($event_id <= 0) {
+if ($event_id < 1) {
     header('Location: /explore');
     exit();
 }
@@ -18,12 +18,9 @@ $imageResult = pg_query_params($db, $imageQuery, [$event_id]);
 $image = pg_fetch_assoc($imageResult);
 
 $query = "
-    SELECT e.*, 
-           u.username AS organizer_name,
-           u.user_id AS organizer_id,
-           COALESCE((
-               SELECT COUNT(*) FROM user_event_attendance WHERE event_id = e.event_id
-           ), 0) AS current_participants
+    SELECT e.*, u.username AS organizer_name, u.user_id AS organizer_id, COALESCE((
+        SELECT COUNT(*) FROM user_event_attendance WHERE event_id = e.event_id
+    ), 0) AS current_participants
     FROM events e
     LEFT JOIN users u ON e.organizer_id = u.user_id
     WHERE e.event_id = $1 AND e.is_approved = TRUE
@@ -107,43 +104,6 @@ if ($action === 'cancel' && $is_booked) {
     exit();
 }
 
-if ($action === 'pay' && isset($_SESSION['user_id']) && !$is_booked && $event['ticket_price'] > 0) {
-    if ($event['capacity'] > $event['current_participants']) {
-        $paymentData = [
-            'token' => $_POST['token'],
-            'amount' => $event['ticket_price'] * 100
-        ];
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://dev.khalti.com/api/v2/payment/verify/");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($paymentData));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: Key " . $KHALTI_SECRET_KEY
-        ]);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        $responseData = json_decode($response, true);
-        if ($responseData['idx']) {
-            $addQuery = "
-                INSERT INTO user_event_attendance (user_id, event_id)
-                VALUES ($1, $2)
-                ON CONFLICT DO NOTHING
-            ";
-            pg_query_params($db, $addQuery, [$user_id, $event_id]);
-            $_SESSION['transaction_msg'] = "You have successfully registered for the event.";
-        } else {
-            $_SESSION['transaction_msg'] = "Payment failed. Please try again.";
-        }
-
-    } else {
-        $_SESSION['transaction_msg'] = "Sorry, the event is fully booked.";
-    }
-}
-
 if ($action === 'delete' && ($is_event_organizer || $is_admin)) {
     $deleteAttendanceQuery = "DELETE FROM user_event_attendance WHERE event_id = $1";
     $deleteImagesQuery = "DELETE FROM event_images WHERE event_id = $1";
@@ -165,54 +125,55 @@ if ($action === 'delete' && ($is_event_organizer || $is_admin)) {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_event'])) {
-    try {
-        $title = trim($_POST['title']);
-        $location = trim($_POST['location']);
-        $description = trim($_POST['description']);
-        $capacity = (int)$_POST['capacity'];
-        $ticket_price = (float)$_POST['ticket_price'];
+if ($action === 'edit' && $is_event_organizer) {
+    $title = trim($_POST['title']);
+    $location = trim($_POST['location']);
+    $description = trim($_POST['description']);
+    $capacity = (int)$_POST['capacity'];
+    $ticket_price = (float)$_POST['ticket_price'];
 
-        if (!$title || !$location || !$description || $capacity <= 0 || $ticket_price <= 0) {
-            throw new Exception("Invalid input data");
-        }
-
-        $updateQuery = "
-            UPDATE events
-            SET title = $1, location = $2, description = $3, capacity = $4, ticket_price = $5
-            WHERE event_id = $6 AND organizer_id = $7
-        ";
-
-        $result = pg_query_params($db, $updateQuery, [
-            $title, $location, $description, $capacity, $ticket_price, $event_id, $_SESSION['user_id']
-        ]);
-
-        if (!$result) {
-            throw new Exception("Failed to update event: " . pg_last_error($db));
-        }
-
-        $_SESSION['transaction_msg'] = "Event updated successfully.";
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        $_SESSION['transaction_msg'] = $e->getMessage();
+    if (empty($title) || empty($location) || empty($description) || $capacity <= 0 || $ticket_price <= 0) {
+        $error = "Please fill in all fields correctly.";
     }
+
+    $checkEventQuery = "SELECT 1 FROM events WHERE event_id = $1 AND organizer_id = $2";
+    $eventCheckResult = pg_query_params($db, $checkEventQuery, [$event_id, $_SESSION['user_id']]);
+    if (!$eventCheckResult || pg_num_rows($eventCheckResult) === 0) {
+        throw new Exception("Event not found or you do not have permission to edit it.");
+    }
+
+    $updateQuery = "UPDATE events SET title = $1, location = $2, description = $3, capacity = $4, ticket_price = $5 WHERE event_id = $6 AND organizer_id = $7";
+
+    $result = pg_query_params($db, $updateQuery, [ $title, $location, $description, $capacity, $ticket_price, $event_id, $_SESSION['user_id'] ]);
+
+    if (!$result) {
+        throw new Exception("Failed to update event: " . pg_last_error($db));
+    }
+
+    $_SESSION['transaction_msg'] = "Event updated successfully.";
 
     header("Location: /event?event_id=$event_id");
     exit();
 }
 
+if ($action == 'pay' && $event['ticket_price'] >= 0) {
+    include __DIR__ . '../../handlers/payment_handler.php';
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($event['title'] ?? 'Event Details') ?> - Chautari</title>
     <link rel="stylesheet" href="../assets/css/default.css">
-    <link rel="stylesheet" href="../assets/css/index.css">`
-    <link rel="stylesheet" href="../assets/css/event.css">`
+    <link rel="stylesheet" href="../assets/css/index.css">
+    <link rel="stylesheet" href="../assets/css/event.css">
 </head>
+
 <body>
     <?php include __DIR__ . '/../components/header.php'; ?>
 
@@ -236,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_event'])) {
                 </div>
 
                 <br><br>
-                <p style="font-size: 1.3rem; text-align: center;"><b>NPR </b><?= htmlspecialchars($event['ticket_price']) ?></p>
+                <p style="font-size: 1.3rem; text-align: center;"><?= htmlspecialchars($event['ticket_price']) ?> <b><small>NPR</small></b></p>
 
                 <div class="event-actions" style="margin: 50px auto; max-width: 400px; display: flex; gap: 10px;">
                     <?php if ($is_booked): ?>
@@ -258,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_event'])) {
                             <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
                                 <input type="hidden" name="event_id" value="<?= $event_id ?>">
                                 <input type="hidden" name="action" value="pay">
-                                <button type="button" class="primary-button register-btn" id="pay-button" style="border: none;">Book Event</button>
+                                <button type="submit" class="primary-button register-btn" style="border: none;">Book at <?= $event['ticket_price'] ?></button>
                             </form>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -270,7 +231,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_event'])) {
                                 <span class="close" onclick="closeModal()">&times;</span>
                                 <h2>Edit Event Details</h2>
                                 <form id="editEventForm" action="/event?event_id=<?= $event_id ?>" method="POST" enctype="multipart/form-data">
-                                   <input type="hidden" name="edit_event" value="1">
+                                    <input type="hidden" name="edit" value="<?= $event_id ?>">
+                                    <input type="hidden" name="action" value="edit">
 
                                     <label for="title">Event Title:</label>
                                     <input type="text" id="title" name="title" value="<?= htmlspecialchars($event['title']) ?>" required><br><br>
@@ -310,7 +272,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_event'])) {
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
     <script src="../assets/js/event-modal.js"></script>
-    <script src="https://khalti.com/static/khalti-checkout.js"></script>
-    <script src="../assets/js/event-khalti.js"></script>
-</body>
+    </body>
 </html>

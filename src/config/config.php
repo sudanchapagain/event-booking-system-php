@@ -15,13 +15,23 @@ if (!defined('DB_NAME')) {
     define('DB_NAME', getenv('DB_NAME') ?: 'event_booking_system');
 }
 if (!defined('DB_PORT')) {
-    define('DB_PORT', getenv('DB_PORT') ?: '5432');
+    define('DB_PORT', (int)getenv('DB_PORT') ?: 5432);
 }
 
 function getDbConnection() {
-    $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
+    $connectionString = sprintf(
+        'host=%s port=%d dbname=%s user=%s password=%s',
+        DB_HOST,
+        DB_PORT,
+        DB_NAME,
+        DB_USER,
+        DB_PASS
+    );
+
+    $connection = pg_connect($connectionString);
     if (!$connection) {
         die('Error: Unable to connect to the database.');
     }
+
     return $connection;
 }
