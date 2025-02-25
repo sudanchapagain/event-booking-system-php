@@ -81,7 +81,6 @@ if (isset($_SESSION['user_id'])) {
                 <input type="password" id="password" name="password" required inputmode="password">
                 <span id="passwordError" class="error"></span>
 
-                <span id="passNoMatch"></span>
                 <style>
                     #passNoMatch,
                     .error {

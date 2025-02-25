@@ -20,6 +20,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
+    if (!preg_match('/[A-Z]/', $password)) {
+        header('Location: /signup?signup_error=password_uppercase');
+        exit();
+    }
+
+    if (!preg_match('/[a-z]/', $password)) {
+        header('Location: /signup?signup_error=password_lowercase');
+        exit();
+    }
+
+    if (!preg_match('/\d/', $password)) {
+        header('Location: /signup?signup_error=password_digit');
+        exit();
+    }
+
+    if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+        header('Location: /signup?signup_error=password_special_char');
+        exit();
+    }
+
     $phone_number = trim($_POST['phone_number']);
     if (!preg_match('/^(98|97)\d{8}$/', $phone_number)) {
         header('Location: /signup?signup_error=wrong_phone_format');

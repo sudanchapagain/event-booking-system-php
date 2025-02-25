@@ -254,11 +254,16 @@ if ($action == 'pay' && $event['ticket_price'] >= 0) {
                             </div>
                         </div>
 
-                        <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
+                        <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;" onsubmit="return confirmDelete()">
                             <input type="hidden" name="event_id" value="<?= $event_id ?>">
                             <input type="hidden" name="action" value="delete">
                             <button type="submit" class="secondary-button" style="background-color: #E81C30; border:none; color: #fff;">Delete</button>
                         </form>
+                        <script>
+                            function confirmDelete() {
+                                return confirm("Are you sure you want to delete this event?");
+                            }
+                        </script>
                     <?php endif; ?>
                 </div>
 

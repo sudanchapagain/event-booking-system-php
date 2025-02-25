@@ -47,7 +47,7 @@
         </p>
 
         <div class="formbody">
-            <form action="/login" method="post">
+            <form id="loginForm" action="/login" method="post">
 
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required inputmode="email">
@@ -58,6 +58,7 @@
                 <span id="passwordError" class="error"></span>
 
                 <br>
+                <span id="submitError" class="error"></span>
                 <button type="submit">Log in</button>
             </form>
         </div>
@@ -70,7 +71,7 @@
 
     </main>
 
-    <script src="../assets/js/login_validation.js"></script>
+    <script defer src="../assets/js/login_validation.js"></script>
 
 </body>
 

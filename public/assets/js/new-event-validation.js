@@ -4,7 +4,8 @@ function validateForm() {
     let location = document.getElementById("location").value.trim();
     let startDate = document.getElementById("start_date").value;
     let endDate = document.getElementById("end_date").value;
-    let capacity = document.getElementById("capacity").value;
+    let capacity = document.getElementById("capacity").value.trim();
+    let ticketPrice = document.getElementById("ticket_price").value.trim();
 
     clearErrors();
 
@@ -42,11 +43,19 @@ function validateForm() {
         isValid = false;
     }
 
-    if (capacity === "") {
+    if (capacity === "" || capacity === "0") {
         document.getElementById("capacityError").innerText = "Capacity is required.";
         isValid = false;
-    } else if (isNaN(capacity) || capacity <= 0) {
-        document.getElementById("capacityError").innerText = "Capacity must be a positive number.";
+    } else if (!/^\d+$/.test(capacity) || parseInt(capacity) <= 0) {
+        document.getElementById("capacityError").innerText = "Capacity must be a positive whole number.";
+        isValid = false;
+    }
+
+    if (ticketPrice === "0") {
+        document.getElementById("ticketPriceError").innerText = "Leave the field empty for free events.";
+        isValid = false;
+    } else if (!/^\d+$/.test(ticketPrice) || parseInt(ticketPrice) < 0) {
+        document.getElementById("ticketPriceError").innerText = "Ticket price must be a non-negative whole number.";
         isValid = false;
     }
 
@@ -59,5 +68,5 @@ function clearErrors() {
     document.getElementById("startDateError").innerText = "";
     document.getElementById("endDateError").innerText = "";
     document.getElementById("capacityError").innerText = "";
+    document.getElementById("ticketPriceError").innerText = "";
 }
-

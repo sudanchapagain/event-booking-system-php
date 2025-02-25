@@ -85,8 +85,7 @@ if (!$categoriesResult) {
 
 $categories = pg_fetch_all($categoriesResult);
 
-function safe_htmlspecialchars($value)
-{
+function safe_htmlspecialchars($value) {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 ?>

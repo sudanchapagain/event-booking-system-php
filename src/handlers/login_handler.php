@@ -11,6 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die('Password must be at least 8 characters long.');
     }
 
+    if (!preg_match('/[A-Z]/', $password)) {
+        die('Password must contain at least one uppercase letter.');
+    }
+
+    if (!preg_match('/[a-z]/', $password)) {
+        die('Password must contain at least one lowercase letter.');
+    }
+
+    if (!preg_match('/\d/', $password)) {
+        die('Password must contain at least one digit.');
+    }
+
+    if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+        die('Password must contain at least one special character.');
+    }
+
     $conn = getDbConnection();
 
     if (!$conn) {

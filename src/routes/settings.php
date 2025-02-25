@@ -19,8 +19,7 @@ if (!$result || pg_num_rows($result) === 0) {
 
 $user = pg_fetch_assoc($result);
 
-function escape($value): string
-{
+function escape($value): string {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 

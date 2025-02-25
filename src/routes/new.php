@@ -182,6 +182,7 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
             <div id="ticket_price">
                 <input type="number" name="ticket_price" step="0.01" min="0" placeholder="Ticket Price">
             </div>
+            <div id="ticketPriceError" class="error-message"></div>
             <br>
 
             <label for="category">Event Category</label>

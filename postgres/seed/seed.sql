@@ -128,7 +128,6 @@ VALUES
     (3, 16),
     (4, 15),
     (5, 14),
-    (6, 13),
     (7, 12),
     (8, 11),
     (9, 10),
@@ -164,8 +163,7 @@ VALUES
     (16, 'seed_data/images/16.jpg', 'image/jpeg'),
     (17, 'seed_data/images/17.jpg', 'image/jpeg'),
     (18, 'seed_data/images/18.jpg', 'image/jpeg'),
-    (19, 'seed_data/images/19.jpg', 'image/jpeg'),
-    (20, 'seed_data/images/20.jpg', 'image/jpeg');
+    (19, 'seed_data/images/19.jpg', 'image/jpeg');
 
 INSERT INTO event_dates (event_id, start_date, end_date) VALUES 
     (1, '2024-10-01 09:00:00', '2024-10-01 17:00:00'),
