@@ -1,0 +1,74 @@
+{% extends "base.jinja" %}
+{% block title %}Sign Up - Chautari{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block content %}
+    <div class="flex items-center justify-center min-h-screen py-12">
+        <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg">
+            <div class="text-left">
+                <img src="/static/images/logo-64.svg"
+                     alt="Chautari Logo"
+                     class="w-8 h-8 mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Sign up</h2>
+                <p class="text-gray-600">Create your account to start</p>
+            </div>
+            {% if errors %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+                     role="alert">
+                    {% for error in errors %}<p class="text-sm">{{ error }}</p>{% endfor %}
+                </div>
+            {% endif %}
+            <form action="/signup"
+                  method="post"
+                  class="space-y-6"
+                  onsubmit="return validateForm()">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text"
+                           name="username"
+                           id="username"
+                           required
+                           class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#ff4a22] focus:border-[#ff4a22] sm:text-sm"
+                           placeholder="Choose a username">
+                    <div id="usernameError" class="text-red-500 text-sm mt-1"></div>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email"
+                           name="email"
+                           id="email"
+                           required
+                           class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#ff4a22] focus:border-[#ff4a22] sm:text-sm"
+                           placeholder="Enter your email">
+                    <div id="emailError" class="text-red-500 text-sm mt-1"></div>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password"
+                           name="password"
+                           id="password"
+                           required
+                           class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#ff4a22] focus:border-[#ff4a22] sm:text-sm"
+                           placeholder="Create a strong password">
+                    <div id="passwordError" class="text-red-500 text-sm mt-1"></div>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Password must be at least 8 characters with special character,
+                        digit, uppercase and lowercase letter.
+                    </p>
+                </div>
+                <div>
+                    <button type="submit"
+                            class="w-full px-4 py-2 text-sm font-medium text-white bg-[#ff4a22] border border-transparent rounded-md shadow-sm hover:bg-[#ff6438] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff6438]">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+            <div class="text-center">
+                <p class="text-sm text-gray-600">
+                    Already have an account?
+                    <a href="/login" class="font-medium text-[#ff4a22] hover:text-[#ff6438]">Sign in here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_js %}<script src="/static/js/signup_validation.js"></script>{% endblock %}

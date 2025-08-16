@@ -1,0 +1,135 @@
+{% extends "base.jinja" %}
+{% block title %}
+    {% if event %}
+        {{ event.title }} - Chautari
+    {% else %}
+        Event Not Found - Chautari
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <main class="max-w-[750px] mx-auto">
+        {% if error %}
+            <div class="text-red-500 text-center my-4">{{ error }}</div>
+        {% else %}
+            <div class="bg-gray-100 rounded-xl p-4 my-8">
+                {% if event_image_url %}
+                    <img src="{{ event_image_url }}"
+                         class="w-full h-96 object-cover rounded-xl border border-black mt-20">
+                {% else %}
+                    <div class="h-24"></div>
+                {% endif %}
+                <h2 class="text-left text-5xl font-bold mt-4 text-gray-700">{{ event.title }}</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <p>
+                        <b>Organizer:</b> {{ event.organizer_name | default("Unknown") }}
+                    </p>
+                    <p>
+                        <b>Address:</b> {{ event.location }}
+                    </p>
+                    <p>
+                        <b>Available Capacity:</b> {{ event.capacity - event.current_participants }}
+                    </p>
+                </div>
+                <p class="text-2xl text-center mt-8">
+                    {{ event.ticket_price }} <b><small>NPR</small></b>
+                </p>
+                <div class="flex justify-center gap-2 mx-auto my-12 max-w-md">
+                    {% if is_booked %}
+                        <form action="/event/{{ event.event_id }}/cancel" method="POST" class="m-0">
+                            <button type="submit"
+                                    class="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700">
+                                Cancel
+                                Booking
+                            </button>
+                        </form>
+                    {% elif not user %}
+                        <p>
+                            <a href="/login"
+                               class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 inline-block">Login to register
+                            for this event</a>
+                        </p>
+                    {% else %}
+                        <form action="/event/{{ event.event_id }}/register"
+                              method="POST"
+                              class="m-0">
+                            <button type="submit"
+                                    class="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700">
+                                {% if event.ticket_price == 0 %}
+                                    Book Event
+                                {% else %}
+                                    Book at {{ event.ticket_price }}
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% endif %}
+                    {% if is_event_organizer or is_admin %}
+                        <a href="javascript:void(0);"
+                           class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700"
+                           onclick="openModal()">Update</a>
+                        <div id="editEventModal"
+                             class="hidden fixed z-10 left-0 top-0 w-full h-full bg-black bg-opacity-40">
+                            <div class="bg-white m-auto mt-[15%] p-5 border border-gray-300 w-4/5 max-w-[500px] rounded-2xl relative">
+                                <span class="absolute top-4 right-6 text-gray-400 text-3xl font-bold hover:text-black cursor-pointer"
+                                      onclick="closeModal()">&times;</span>
+                                <h2 class="text-2xl font-bold mt-4">Edit Event Details</h2>
+                                <form id="editEventForm"
+                                      action="/event/{{ event.event_id }}/update"
+                                      method="POST"
+                                      enctype="multipart/form-data"
+                                      class="max-w-xl mx-auto p-5">
+                                    <input type="hidden" name="edit" value="{{ event.event_id }}">
+                                    <label for="title" class="block mt-4 font-bold">Event Title:</label>
+                                    <input type="text"
+                                           id="title"
+                                           name="title"
+                                           value="{{ event.title }}"
+                                           required
+                                           class="w-full p-2 mt-1 rounded-md border border-gray-300">
+                                    <label for="location" class="block mt-4 font-bold">Location:</label>
+                                    <input type="text"
+                                           id="location"
+                                           name="location"
+                                           value="{{ event.location }}"
+                                           required
+                                           class="w-full p-2 mt-1 rounded-md border border-gray-300">
+                                    <label for="description" class="block mt-4 font-bold">Description:</label>
+                                    <textarea id="description"
+                                              name="description"
+                                              class="w-full p-2 mt-1 rounded-md border border-gray-300">{{ event.description }}</textarea>
+                                    <label for="capacity" class="block mt-4 font-bold">Capacity:</label>
+                                    <input type="number"
+                                           id="capacity"
+                                           name="capacity"
+                                           value="{{ event.capacity }}"
+                                           required
+                                           class="w-full p-2 mt-1 rounded-md border border-gray-300">
+                                    <label for="ticket_price" class="block mt-4 font-bold">Ticket Price:</label>
+                                    <input type="number"
+                                           id="ticket_price"
+                                           name="ticket_price"
+                                           value="{{ event.ticket_price }}"
+                                           step="0.01"
+                                           required
+                                           class="w-full p-2 mt-1 rounded-md border border-gray-300">
+                                    <button type="submit"
+                                            class="bg-black text-white px-4 py-2 rounded-md cursor-pointer mt-5">
+                                        Save
+                                        Changes
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <form action="/event/{{ event.event_id }}/delete"
+                              method="POST"
+                              class="m-0"
+                              onsubmit="return confirmDelete()">
+                            <button type="submit"
+                                    class="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700">Delete</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </main>
+{% endblock %}
+{% block extra_js %}<script src="/static/js/event-modal.js"></script>{% endblock %}

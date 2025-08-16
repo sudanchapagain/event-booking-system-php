@@ -1,0 +1,20 @@
+@font-face {
+  font-family: Inter;
+  src: url("../font/intervar.woff2");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::selection {
+  background-color: rgba(225, 118, 76, 0.2);
+}
+
+html {
+  font-size: 16px;
+  color: #171717;
+  font-family: Inter, Helvetica, Arial, sans-serif;
+}

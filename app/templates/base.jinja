@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block title %}Chautari - Event booking system{% endblock %}
+        </title>
+        <meta name="description"
+              content="{% block description %}Struggling to discover fun and exciting events near you? Chautari brings the best local events tailored to you so you can join local happenings with ease.{% endblock %}">
+        <meta property="og:title"
+              content="{% block og_title %}Chautari — Find out about events around you.{% endblock %}">
+        <link rel="icon"
+              type="image/x-icon"
+              href="/static/images/favicon.ico"
+              sizes="any">
+        <link rel="stylesheet" href="/static/css/default.css">
+        <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+        {% block extra_css %}{% endblock %}
+    </head>
+    <body>
+        <div class="bg-white sticky top-0 z-50">
+            <header class="flex justify-between items-center px-8 py-4 pt-6 max-w-[78rem] mx-auto text-sm font-medium border-b border-[#f0f0f0] bg-white">
+                <div class="select-none">
+                    <a href="/" class="flex items-center no-underline text-[#171717]">
+                        <div class="flex items-center">
+                            <img src="/static/images/logo-32.svg" alt="logo" class="mr-2">
+                            <p class="font-semibold text-[1.125rem] leading-7">Chautari</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="hidden sm:block">
+                    <nav>
+                        <ul class="flex list-none m-0 p-0">
+                            <li class="px-2">
+                                <a href="/" class="no-underline text-[#171717] hover:text-[#ff4a22]">Home</a>
+                            </li>
+                            <li class="px-2">
+                                <a href="/about"
+                                   class="no-underline text-[#171717] hover:text-[#ff4a22]">About</a>
+                            </li>
+                            <li class="px-2">
+                                <a href="/contact"
+                                   class="no-underline text-[#171717] hover:text-[#ff4a22]">Contact</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="hidden md:block">
+                    {% if not user %}
+                        <a href="/login"
+                           class="text-[#171717] px-4 py-2 rounded-full no-underline font-medium hover:bg-[#f0f0f0] ml-2">Log in</a>
+                        <a href="/signup"
+                           class="bg-[#ff4a22] text-white px-4 py-2 rounded-full no-underline font-medium hover:bg-[#ff6438] ml-2">Sign
+                        up today</a>
+                    {% else %}
+                        <div class="grid grid-cols-2 gap-4 items-center">
+                            <div class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full">
+                                <img src="/static/images/default-avatar.png"
+                                     alt="Profile Picture"
+                                     id="profilePic">
+                            </div>
+                            <div class="mt-1">
+                                <p class="font-bold">{{ user.username }}</p>
+                                <p class="text-gray-500 text-sm">
+                                    {% if user.is_admin %}
+                                        Admin
+                                    {% elif user.is_organizer %}
+                                        Organizer
+                                    {% else %}
+                                        User
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div id="profileDropdown"
+                             class="hidden absolute right-[150px] top-full mt-2 w-[150px] bg-white border border-gray-200 rounded-lg shadow">
+                            <ul class="list-none p-0 m-0 block">
+                                <li>
+                                    <a href="/new"
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">New event</a>
+                                </li>
+                                <li>
+                                    <a href="/profile"
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="/settings"
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">Settings</a>
+                                </li>
+                                {% if user.is_organizer or user.is_admin %}
+                                    <li>
+                                        <a href="/dashboard"
+                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">Dashboard</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="/logout"
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">Log out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="block md:hidden cursor-pointer" onclick="toggleOverlay()">
+                    <svg class="nav-toggle"
+                         width="24"
+                         height="24"
+                         fill="none"
+                         viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6H20M4 12H20M4 18H20">
+                        </path>
+                    </svg>
+                </div>
+                <div id="overlay"
+                     class="hidden fixed top-0 left-0 w-full h-full bg-white z-50">
+                    <div class="p-8">
+                        <h2 class="text-xl font-semibold mb-5">Menu</h2>
+                        <hr class="mb-4">
+                        <ul class="block list-none p-0">
+                            <li class="mb-2">
+                                <a href="/about" class="block py-1 hover:text-[#ff4a22]">About</a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="/contact" class="block py-1 hover:text-[#ff4a22]">Contact</a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="/privacy" class="block py-1 hover:text-[#ff4a22]">Privacy</a>
+                            </li>
+                            <hr class="my-3">
+                            {% if not user %}
+                                <li class="mb-2">
+                                    <a href="/login" class="block py-1 hover:text-[#ff4a22]">Log in</a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="/signup" class="block py-1 hover:text-[#ff4a22]">Sign up</a>
+                                </li>
+                            {% else %}
+                                <li class="mb-2">
+                                    <a href="/new" class="block py-1 hover:text-[#ff4a22]">New event</a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="/profile" class="block py-1 hover:text-[#ff4a22]">Profile</a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="/settings" class="block py-1 hover:text-[#ff4a22]">Settings</a>
+                                </li>
+                                {% if user.is_organizer or user.is_admin %}
+                                    <li class="mb-2">
+                                        <a href="/dashboard" class="block py-1 hover:text-[#ff4a22]">Dashboard</a>
+                                    </li>
+                                {% endif %}
+                                <li class="mb-2">
+                                    <a href="/logout" class="block py-1 hover:text-[#ff4a22]">Log out</a>
+                                </li>
+                            {% endif %}
+                            <hr class="my-3">
+                        </ul>
+                        <button onclick="toggleOverlay()"
+                                class="mt-5 px-[10vw] py-2 bg-gray-300 hover:bg-gray-200 rounded-full text-base cursor-pointer">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </header>
+        </div>
+        {% if request.query_params.get('message') %}
+            <div style="background-color: #dbeafe;
+                        border: 1px solid #60a5fa;
+                        color: #1e40af;
+                        padding: 12px;
+                        margin: 16px;
+                        border-radius: 4px">{{ request.query_params.get("message") }}</div>
+        {% endif %}
+        {% block content %}{% endblock %}
+        <footer class="bg-[#0a0a0a] text-[#a3a3a3]">
+            <div class="px-8 py-8 max-w-[78rem] mx-auto">
+                <div class="mt-[50px] text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="32"
+                         height="32"
+                         viewBox="0 0 256 256"
+                         fill="currentColor">
+                        <path d="M128 187.85a72 72 0 0 0 8 4.62V232a8 8 0 0 1-16 0v-39.53a72 72 0 0 0 8-4.62m70.1-125.26a76 76 0 0 0-140.2 0A71.71 71.71 0 0 0 16 127.8C15.9 166 48 199 86.14 200a72.2 72.2 0 0 0 33.86-7.53v-35.53l-43.58-21.78a8 8 0 1 1 7.16-14.32L120 139.06V88a8 8 0 0 1 16 0v27.06l36.42-18.22a8 8 0 1 1 7.16 14.32L136 132.94v59.53a72.2 72.2 0 0 0 32 7.53h1.82c38.18-1 70.29-34 70.18-72.2a71.71 71.71 0 0 0-41.9-65.21" />
+                    </svg>
+                </div>
+                <div class="my-5">
+                    <ul class="flex flex-wrap">
+                        <li class="list-none mb-[10px] pr-5">
+                            <a href="/contact" class="text-gray-300 hover:text-[#f5f5f5]">Contact</a>
+                        </li>
+                        <li class="list-none mb-[10px] pr-5">
+                            <a href="/privacy" class="text-gray-300 hover:text-[#f5f5f5]">Privacy</a>
+                        </li>
+                        <li class="list-none mb-[10px] pr-5">
+                            <a href="/terms" class="text-gray-300 hover:text-[#f5f5f5]">Terms</a>
+                        </li>
+                        <li class="list-none mb-[10px] pr-5">
+                            <a href="/dpa" class="text-gray-300 hover:text-[#f5f5f5]">DPA</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mb-[30px] flex space-x-4">
+                    <a href="#" class="text-[#a3a3a3] hover:text-[#f5f5f5]">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0083 0.166016C4.47396 0.166016 0 4.67295 0 10.2486C0 14.7056 2.86662 18.4784 6.84337 19.8136C7.34057 19.914 7.52269 19.5966 7.52269 19.3297C7.52269 19.096 7.5063 18.2948 7.5063 17.4599C4.72224 18.061 4.14249 16.2581 4.14249 16.2581C3.69507 15.0896 3.03215 14.7892 3.03215 14.7892C2.12092 14.1716 3.09852 14.1716 3.09852 14.1716C4.10931 14.2383 4.63968 15.2065 4.63968 15.2065C5.53431 16.7421 6.97591 16.3082 7.55588 16.0411C7.63864 15.39 7.90394 14.9393 8.18561 14.689C5.96513 14.4553 3.6289 13.5872 3.6289 9.71442C3.6289 8.61265 4.02633 7.71124 4.65607 7.01021C4.55672 6.75987 4.20866 5.7247 4.75564 4.33924C4.75564 4.33924 5.60069 4.0721 7.5061 5.37419C8.32186 5.15348 9.16316 5.04121 10.0083 5.04027C10.8533 5.04027 11.7148 5.15724 12.5102 5.37419C14.4158 4.0721 15.2609 4.33924 15.2609 4.33924C15.8079 5.7247 15.4596 6.75987 15.3603 7.01021C16.0066 7.71124 16.3876 8.61265 16.3876 9.71442C16.3876 13.5872 14.0514 14.4385 11.8143 14.689C12.1789 15.0061 12.4936 15.607 12.4936 16.5586C12.4936 17.9106 12.4772 18.9958 12.4772 19.3295C12.4772 19.5966 12.6596 19.914 13.1566 19.8138C17.1333 18.4781 20 14.7056 20 10.2486C20.0163 4.67295 15.526 0.166016 10.0083 0.166016Z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="text-[#a3a3a3] hover:text-[#f5f5f5]">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.3263 1.90393H21.6998L14.3297 10.3274L23 21.7899H16.2112L10.894 14.838L4.80995 21.7899H1.43443L9.31743 12.78L1 1.90393H7.96111L12.7674 8.25826L18.3263 1.90393ZM17.1423 19.7707H19.0116L6.94539 3.81706H4.93946L17.1423 19.7707Z" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="text-[#737373] mb-10">
+                    <p>&copy; 2024 Sano Chautari Software Company limited.</p>
+                </div>
+            </div>
+        </footer>
+        {% block extra_js %}
+            <script src="/static/js/hamburger.js"></script>
+            <script src="/static/js/profile-icon-loader.js"></script>
+        {% endblock %}
+    </body>
+</html>

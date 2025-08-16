@@ -1,0 +1,53 @@
+{% extends "dashboard/base.jinja" %}
+{% block dashboard_content %}
+    <h1 class="text-left text-4xl mt-5 text-[#ff6438]">Event Bookings</h1>
+    {% if bookings %}
+        {% for event_booking in bookings %}
+            <h2 class="text-2xl font-bold mt-4">{{ event_booking.title }}</h2>
+            <table class="w-full border-collapse my-5 shadow-md rounded-lg overflow-hidden"
+                   id="bookingsTable_{{ loop.index }}">
+                <thead class="bg-gray-100 text-gray-700">
+                    <tr>
+                        <th class="p-3 text-left border border-gray-300">Attendee</th>
+                        <th class="p-3 text-left border border-gray-300">Email</th>
+                        <th class="p-3 text-left border border-gray-300">Phone</th>
+                        <th class="p-3 text-left border border-gray-300">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendee in event_booking.attendees %}
+                        <tr class="bg-white hover:bg-gray-50">
+                            <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ attendee.username }}</td>
+                            <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ attendee.email }}</td>
+                            <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ attendee.user_phone }}</td>
+                            <td class="p-3 border border-gray-300 text-sm font-bold {% if attendee.status == 'confirmed' %}text-green-600 bg-green-100{% elif attendee.status == 'pending' %}text-[#ff6438] bg-orange-100{% elif attendee.status == 'cancelled' %}text-red-600 bg-red-100{% endif %} rounded-md">
+                                {{ attendee.status }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button onclick="printTable('bookingsTable_{{ loop.index }}')"
+                    class="px-3 py-1 text-black border border-gray-400 rounded-full hover:bg-gray-100">
+                Print Bookings
+            </button>
+            <br>
+            <br>
+        {% endfor %}
+    {% else %}
+        <p class="text-gray-600">No bookings found for your events.</p>
+    {% endif %}
+{% endblock %}
+{% block dashboard_js %}
+    <script>
+    function printTable(tableId) {
+        var printContent = document.getElementById(tableId).outerHTML;
+        var newWindow = window.open('', '', 'width=800, height=600');
+        newWindow.document.write('<html><head><title>Print Table</title><link rel="stylesheet" href="/static/css/main.css"></head><body>');
+        newWindow.document.write(printContent);
+        newWindow.document.write('<script>window.print(); window.close();</' + 'script>');
+        newWindow.document.write('</body></html>');
+        newWindow.document.close();
+    }
+</script>
+{% endblock %}

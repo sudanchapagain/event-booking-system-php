@@ -1,0 +1,129 @@
+{% extends "base.jinja" %}
+{% block title %}Create New Event - Chautari{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block content %}
+    <main class="max-w-2xl mx-auto p-5 my-8 border border-gray-300 rounded-lg bg-gray-50">
+        <h1 class="text-4xl font-bold text-[#ff6438] text-center mb-8">Create a new event!</h1>
+        {% if errors %}
+            <ul class="mb-4">
+                {% for error in errors %}<li class="text-red-600 text-sm">{{ error }}</li>{% endfor %}
+            </ul>
+        {% endif %}
+        <form action="/new" method="POST" enctype="multipart/form-data">
+            <label for="title" class="block mt-4 font-bold">
+                Event Title <small class="text-red-600">*</small>
+            </label>
+            <input type="text"
+                   name="title"
+                   id="title"
+                   placeholder="International art exhibition by Nepal Art Council"
+                   required
+                   class="w-full p-2 mt-1 rounded-md border border-gray-300"
+                   value="{{ title | default("") }}">
+            <div id="titleError" class="text-red-600 text-sm mt-1"></div>
+            <br>
+            <label for="location" class="block mt-4 font-bold">
+                Location <small class="text-red-600">*</small>
+            </label>
+            <input type="text"
+                   name="location"
+                   id="location"
+                   placeholder="Pradarshani marg, Kathmandu"
+                   required
+                   class="w-full p-2 mt-1 rounded-md border border-gray-300"
+                   value="{{ location | default("") }}">
+            <div id="locationError" class="text-red-600 text-sm mt-1"></div>
+            <br>
+            <div id="startDateError" class="text-red-600 text-sm mt-1"></div>
+            <div id="endDateError" class="text-red-600 text-sm mt-1"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="start_date" class="block mt-4 font-bold">
+                        Start Date and Time <small class="text-red-600">*</small>
+                    </label>
+                    <input type="datetime-local"
+                           name="start_date"
+                           id="start_date"
+                           required
+                           class="w-full p-2 mt-1 rounded-md border border-gray-300"
+                           value="{{ start_date | default("") }}">
+                </div>
+                <div>
+                    <label for="end_date" class="block mt-4 font-bold">
+                        End Date and Time <small class="text-red-600">*</small>
+                    </label>
+                    <input type="datetime-local"
+                           name="end_date"
+                           id="end_date"
+                           required
+                           class="w-full p-2 mt-1 rounded-md border border-gray-300"
+                           value="{{ end_date | default("") }}">
+                </div>
+            </div>
+            <br>
+            <label for="event_image" class="block mt-4 font-bold">Event Image</label>
+            <input type="file"
+                   name="event_image"
+                   id="event_image"
+                   accept="image/*"
+                   class="w-full p-2 mt-1 rounded-md border border-gray-300">
+            <span class="text-gray-600 text-sm">Upload an image to represent the event.</span>
+            <br>
+            <br>
+            <label for="description" class="block mt-4 font-bold">
+                Event Description <small class="text-red-600">*</small>
+            </label>
+            <textarea name="description"
+                      id="description"
+                      style="height: 200px"
+                      required
+                      class="w-full p-2 mt-1 rounded-md border border-gray-300">{{ description | default('') }}</textarea>
+            <br>
+            <br>
+            <label for="capacity" class="block mt-4 font-bold">
+                Event Capacity <small class="text-red-600">*</small>
+            </label>
+            <input type="number"
+                   name="capacity"
+                   id="capacity"
+                   placeholder="Specify the maximum number of attendees."
+                   required
+                   min="1"
+                   class="w-full p-2 mt-1 rounded-md border border-gray-300"
+                   value="{{ capacity | default(0) }}">
+            <div id="capacityError" class="text-red-600 text-sm mt-1"></div>
+            <br>
+            <br>
+            <h3 class="text-lg font-bold">Ticket Price</h3>
+            <span class="text-gray-600 text-sm">Leave the price empty if it's free.</span>
+            <div id="ticket_price">
+                <input type="number"
+                       name="ticket_price"
+                       step="0.01"
+                       min="0"
+                       placeholder="Ticket Price"
+                       class="w-full p-2 mt-1 rounded-md border border-gray-300"
+                       value="{{ ticket_price | default(0.0) }}">
+            </div>
+            <div id="ticketPriceError" class="text-red-600 text-sm mt-1"></div>
+            <br>
+            <label for="category" class="block mt-4 font-bold">Event Category</label>
+            <select name="category"
+                    id="category"
+                    class="w-full p-2 mt-1 rounded-md border border-gray-300">
+                <option value="">Select Category</option>
+                {% for cat_id, cat_name in categories %}
+                    <option value="{{ cat_id }}" {% if category==cat_id %}selected{% endif %}>{{ cat_name }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <button type="submit"
+                    class="bg-black text-white px-4 py-2 rounded-md border-none cursor-pointer mt-5">
+                Create
+                Event
+            </button>
+        </form>
+    </main>
+{% endblock %}
+{% block extra_js %}<script src="/static/js/new-event-validation.js"></script>{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "dashboard/base.jinja" %}
+{% block dashboard_content %}
+    <h1 class="text-left text-4xl mt-5 text-[#ff6438]">Manage Posts</h1>
+    {% if not is_admin %}
+        <p class="text-red-600">You do not have permission to access this page.</p>
+    {% else %}
+        <div class="max-w-3xl mx-auto mt-20">
+            {% if events %}
+                {% for event_item in events %}
+                    <div class="border border-gray-500 rounded-lg p-4 my-4">
+                        <h3 class="text-xl font-bold">{{ event_item.title }}</h3>
+                        <p class="text-gray-600">{{ event_item.description }}</p>
+                        <p class="text-gray-700">Location: {{ event_item.location }}</p>
+                        <br>
+                        <form method="POST" action="/dashboard/posts">
+                            <input type="hidden" name="event_id" value="{{ event_item.event_id }}">
+                            <button type="submit"
+                                    name="action"
+                                    value="approve_event"
+                                    class="bg-green-500 text-white px-4 py-2 rounded-full border-none font-bold hover:bg-green-600">
+                                Approve
+                            </button>
+                            <button type="submit"
+                                    name="action"
+                                    value="reject_event"
+                                    class="bg-red-500 text-white px-4 py-2 rounded-full border-none font-bold hover:bg-red-600 ml-4">
+                                Reject and Delete
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-gray-600">No unapproved events found.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

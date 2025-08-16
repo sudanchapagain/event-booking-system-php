@@ -1,0 +1,127 @@
+{% extends "base.jinja" %}
+{% block title %}Explore Events - Chautari{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block content %}
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mt-4">Explore Events</h1>
+        <form method="GET" action="/explore" class="max-w-2xl mx-auto p-5">
+            <div class="flex items-center mb-4">
+                <input type="text"
+                       name="search"
+                       id="search"
+                       value="{{ search_term | default("") }}"
+                       placeholder="Search here"
+                       class="flex-grow p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#f97316]">
+                <button type="submit"
+                        class="bg-gray-500 text-white px-4 py-2 rounded-r-lg hover:bg-gray-600">Search</button>
+                <button type="button"
+                        onclick="showFilterDialog()"
+                        class="ml-4 bg-white text-gray-700 border border-gray-400 px-4 py-2 rounded-lg hover:bg-gray-100">
+                    More Filters
+                </button>
+            </div>
+            <dialog id="filter-dialog" class="p-5 mx-auto my-auto rounded-lg shadow-lg">
+                <form method="dialog">
+                    <fieldset class="border-none p-0">
+                        <legend class="text-xl font-semibold mb-4">Filter Options</legend>
+                        <label for="location" class="block text-gray-700 text-sm font-bold mb-2">Location</label>
+                        <input type="text"
+                               name="location"
+                               id="location"
+                               value="{{ location | default("") }}"
+                               placeholder="City, venue, etc."
+                               class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#ff4a22]">
+                        <label for="category" class="block text-gray-700 text-sm font-bold mb-2">Category</label>
+                        <select name="category"
+                                id="category"
+                                class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#ff4a22]">
+                            <option value="">All Categories</option>
+                            {% for cat_id, cat_name in categories %}
+                                <option value="{{ cat_id }}"
+                                        {% if selected_category==cat_id %}selected{% endif %}>{{ cat_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="min_price" class="block text-gray-700 text-sm font-bold mb-2">Price Range</label>
+                        <div class="flex gap-4 mb-4">
+                            <input type="number"
+                                   name="min_price"
+                                   id="min_price"
+                                   value="{{ min_price | default(0) }}"
+                                   placeholder="Min"
+                                   min="0"
+                                   class="w-1/2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff4a22]">
+                            <input type="number"
+                                   name="max_price"
+                                   id="max_price"
+                                   value="{{ max_price | default(10000) }}"
+                                   placeholder="Max"
+                                   min="0"
+                                   class="w-1/2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff4a22]">
+                        </div>
+                        <label for="start_date" class="block text-gray-700 text-sm font-bold mb-2">Event Dates</label>
+                        <div class="flex gap-4 mb-4">
+                            <input type="date"
+                                   name="start_date"
+                                   id="start_date"
+                                   value="{{ start_date | default("") }}"
+                                   placeholder="Start Date"
+                                   class="w-1/2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff4a22]">
+                            <input type="date"
+                                   name="end_date"
+                                   id="end_date"
+                                   value="{{ end_date | default("") }}"
+                                   placeholder="End Date"
+                                   class="w-1/2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff4a22]">
+                        </div>
+                    </fieldset>
+                    <div class="flex justify-end gap-4 mt-4">
+                        <button type="button"
+                                onclick="closeFilterDialog()"
+                                class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">Close</button>
+                        <button type="submit"
+                                class="bg-[#ff4a22] text-white px-4 py-2 rounded-md hover:bg-[#ff6438]">
+                            Apply Filters
+                        </button>
+                    </div>
+                </form>
+            </dialog>
+        </form>
+        <div class="event-wrapper mt-8">
+            {% if events %}
+                <div class="event-container flex flex-wrap gap-4 mt-8 justify-center">
+                    {% for event in events %}
+                        <div class="event-item bg-gray-50 p-4 border border-gray-300 rounded-lg flex-1 max-w-sm hover:border-[#ff4a22] transition-all duration-300 ease-in-out">
+                            {% if event.image_url %}
+                                <img src="{{ event.image_url }}"
+                                     class="w-full h-48 object-cover rounded-lg border border-gray-300">
+                            {% else %}
+                                <div class="block h-24"></div>
+                            {% endif %}
+                            <br>
+                            <br>
+                            <h2 class="event-title text-xl font-semibold text-gray-800 mb-2">{{ event.title }}</h2>
+                            <hr class="my-2 border-gray-300">
+                            <p class="event-location text-sm text-gray-600">Location: {{ event.location }}</p>
+                            <p class="event-category text-sm text-gray-600">Category: {{ event.category_name }}</p>
+                            <p class="event-date text-sm text-gray-600">
+                                Start Date: {{ event.start_date }}
+                                <br>
+                                End Date: {{
+                                event.end_date }}
+                            </p>
+                            <p class="event-price text-sm text-gray-600">Price: NPR-{{ event.ticket_price | default(0) }}</p>
+                            <p>
+                                <a href="/event/{{ event.event_id }}"
+                                   class="cta-button-event-list inline-block bg-[#ff4a22] text-white px-4 py-2 rounded-full mt-4 hover:bg-[#ff6438] no-underline transition-colors duration-300 ease-in-out">View
+                                More</a>
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-center text-gray-600">No events found.</p>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
+{% block extra_js %}<script src="/static/js/explore.js"></script>{% endblock %}
